@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quiz Sistema Nervoso</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6fa;
+text-align:center;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+img{
+max-width:100%;
+max-height:250px;
+margin-bottom:15px;
+}
+
+.question{
+font-size:22px;
+margin-bottom:15px;
+}
+
+.answers button{
+display:block;
+width:100%;
+margin:8px 0;
+padding:12px;
+font-size:16px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+background:#e6ecf2;
+}
+
+.answers button:hover{
+background:#d5dde6;
+}
+
+.correct{
+background:#2ecc71 !important;
+color:white;
+}
+
+.wrong{
+background:#e74c3c !important;
+color:white;
+}
+
+.progress{
+height:10px;
+background:#ddd;
+border-radius:5px;
+margin-bottom:20px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#3498db;
+}
+
+.score{
+font-size:18px;
+margin-top:15px;
+}
+
+.next{
+margin-top:15px;
+padding:10px 20px;
+font-size:16px;
+border:none;
+background:#3498db;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Quiz sul Sistema Nervoso</h1>
+
+<div class="container">
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<img id="img">
+
+<div class="question" id="question"></div>
+
+<div class="answers" id="answers"></div>
+
+<button class="next" onclick="nextQuestion()">Prossima domanda</button>
+
+<div class="score" id="score"></div>
+
+</div>
+
+<script>
+
+const quiz=[
+
+{
+img:"images/1-cervello.jpg",
+q:"Quale organo è mostrato nell’immagine?",
+a:["Cuore","Cervello","Polmone","Fegato"],
+c:1
+},
+
+{
+img:"images/3-neurone.png",
+q:"Come si chiama la cellula rappresentata?",
+a:["Globulo rosso","Cellula muscolare","Neurone","Cellula ossea"],
+c:2
+},
+
+{
+img:"images/4-midollo-spinale.jpg",
+q:"Quale struttura è indicata nell’immagine?",
+a:["Midollo spinale","Intestino","Cuore","Polmone"],
+c:0
+},
+
+{
+img:"images/6-cervelletto.jpg",
+q:"Quale parte del cervello controlla equilibrio e coordinazione?",
+a:["Cervelletto","Cuore","Polmone","Stomaco"],
+c:0
+},
+
+{
+img:"images/9-sistema-nervoso-periferico.png",
+q:"A quale sistema appartengono i nervi mostrati?",
+a:["Sistema nervoso periferico","Sistema digestivo","Sistema respiratorio","Sistema muscolare"],
+c:0
+}
+
+]
+
+let current=0
+let score=0
+
+function loadQuestion(){
+
+const q=quiz[current]
+
+document.getElementById("img").src=q.img
+document.getElementById("question").innerText=q.q
+
+const answers=document.getElementById("answers")
+answers.innerHTML=""
+
+q.a.forEach((text,i)=>{
+
+const btn=document.createElement("button")
+btn.innerText=text
+
+btn.onclick=()=>checkAnswer(btn,i)
+
+answers.appendChild(btn)
+
+})
+
+updateProgress()
+
+}
+
+function checkAnswer(btn,i){
+
+const correct=quiz[current].c
+const buttons=document.querySelectorAll(".answers button")
+
+buttons.forEach(b=>b.disabled=true)
+
+if(i===correct){
+
+btn.classList.add("correct")
+score++
+
+}else{
+
+btn.classList.add("wrong")
+buttons[correct].classList.add("correct")
+
+}
+
+document.getElementById("score").innerText="Punteggio: "+score
+
+}
+
+function nextQuestion(){
+
+current++
+
+if(current>=quiz.length){
+
+document.querySelector(".container").innerHTML=
+
+"<h2>Quiz completato!</h2>"+
+"<p>Punteggio finale: "+score+" / "+quiz.length+"</p>"
+
+return
+
+}
+
+loadQuestion()
+
+}
+
+function updateProgress(){
+
+const percent=((current)/quiz.length)*100
+document.getElementById("bar").style.width=percent+"%"
+
+}
+
+loadQuestion()
+
+</script>
+
+</body>
+</html>
